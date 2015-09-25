@@ -1,0 +1,25 @@
+{
+  "name": "nature",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/app.js",
+  "devDependencies": {
+    "browser-sync": "^2.9.6",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.0.2",
+    "gulp-less": "^3.0.3",
+    "mocha": "^2.3.3"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "start": "gulp",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "",
+  "private": true
+}
