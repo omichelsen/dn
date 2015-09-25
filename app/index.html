@@ -25,10 +25,18 @@
 
 <div class="page-main">
 
-    <h2>{{location.name}}</h2>
+    <div class="front">
+        <div class="location">
+            <h2>{{weather.name}}</h2>
+        </div>
 
-    <ul>
-        <li ng-repeat="event in events | filter:{title:'!Årsmøde'}">
+        <div class="weather">
+            <h2 class="temperature">{{weather.main.temp | number:0}}°</h2>
+        </div>
+    </div>
+
+    <ul class="events">
+        <li ng-repeat="event in events | filter:{title:'!Årsmøde'}" class="event">
             <h3>{{event.title}}</h3>
         </li>
     </ul>
