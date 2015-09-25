@@ -137,11 +137,11 @@ body {
   color: white;
 }
 .location {
-  padding: 20px 0;
+  padding: 30px 0;
   text-align: center;
 }
 .location h2 {
-  font-size: 16pt;
+  font-size: 25pt;
 }
 .weather {
   position: absolute;
