@@ -25,6 +25,14 @@
 
 <div class="page-main">
 
+    <h2>{{location.name}}</h2>
+
+    <ul>
+        <li ng-repeat="event in events">
+            <h3>{{event.title}}</h3>
+        </li>
+    </ul>
+
 </div>
 
 <script src="scripts/bower_components/fastclick/lib/fastclick.js"></script>
