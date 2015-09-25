@@ -125,11 +125,16 @@ table {
 }
 body {
   font-family: 'Avenir Next';
+  background: #f8f6ea;
 }
 .front {
   position: relative;
   height: 90vh;
-  background: #f8f6ea;
+  background-image: url('/images/bg-front.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
 }
 .location {
   padding: 20px 0;
@@ -148,9 +153,40 @@ body {
   font-size: 45pt;
 }
 .events {
-  padding: 10px 20px;
+  padding: 5px 15px;
 }
 .events .event {
-  padding: 10px;
+  position: relative;
+  margin: 10px 0;
+  height: 150px;
   line-height: 130%;
+  background-image: url('/images/dn-event-1.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.events .event h3 {
+  position: absolute;
+  padding: 10px;
+  bottom: 0;
+  color: white;
+  font-weight: 100;
+}
+.events .event .details {
+  padding: 6px 8px;
+  background: white;
+  font-size: 10pt;
+}
+.events .event .details .type {
+  text-transform: uppercase;
+}
+.events .event .details .date {
+  float: right;
+  color: #ccc;
+}
+.events .event:nth-child(1) {
+  background-image: url('/images/dn-event-2.jpg');
+}
+.events .event:nth-child(3) {
+  background-image: url('/images/dn-event-3.jpg');
 }
