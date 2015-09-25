@@ -9,6 +9,11 @@ angular.module('app', ['ngRoute'])
 
 .controller('MainCtrl', function ($rootScope, $scope) {
     getLocation().then(function (position) {
+        getAddress(position)
+            .then(function (response) {
+                $scope.address = response.body;
+                $scope.$apply();
+            });
         getZipCodes(position)
             .then(pluckZips)
             .then(function (zips) {
@@ -59,6 +64,25 @@ function getWeather(position) {
                     reject(err);
                 } else {
                     console.log('weather', res.body);
+                    resolve(res);
+                }
+            });
+    });
+}
+
+function getAddress(position) {
+    return new Promise(function (resolve, reject) {
+        window.superagent
+            .get('http://dawa.aws.dk/adgangsadresser/reverse')
+            .query({
+                y: position.coords.latitude,
+                x: position.coords.longitude
+            })
+            .end(function (err, res) {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log('address', res.body);
                     resolve(res);
                 }
             });
