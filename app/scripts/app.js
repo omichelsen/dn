@@ -22,7 +22,7 @@ angular.module('app', ['ngRoute'])
             });
         getWeather(position)
             .then(function (response) {
-                $scope.location = response.body;
+                $scope.weather = response.body;
                 $scope.$apply();
             });
     });
@@ -51,7 +51,8 @@ function getWeather(position) {
             .get('http://api.openweathermap.org/data/2.5/weather')
             .query({
                 lat: position.coords.latitude,
-                lon: position.coords.longitude
+                lon: position.coords.longitude,
+                units: 'metric'
             })
             .end(function (err, res) {
                 if (err) {
