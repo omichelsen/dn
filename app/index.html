@@ -28,7 +28,7 @@
     <h2>{{location.name}}</h2>
 
     <ul>
-        <li ng-repeat="event in events">
+        <li ng-repeat="event in events | filter:{title:'!Årsmøde'}">
             <h3>{{event.title}}</h3>
         </li>
     </ul>

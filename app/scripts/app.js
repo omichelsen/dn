@@ -8,15 +8,23 @@ angular.module('app', ['ngRoute'])
 })
 
 .controller('MainCtrl', function ($rootScope, $scope) {
-    getDnEvents().then(function (response) {
-        $scope.events = response.body;
-        $scope.$apply();
-    });
-
-    getLocation().then(getWeather).then(function (response) {
-        console.log('weather', response);
-        $scope.location = response.body;
-        $scope.$apply();
+    getLocation().then(function (position) {
+        getZipCodes(position)
+            .then(pluckZips)
+            .then(function (zips) {
+                getDnEvents()
+                    .then(function (response) {
+                        $scope.events = response.body.filter(function (item) {
+                            return zips.indexOf(item.zip) > -1;
+                        });
+                        $scope.$apply();
+                    });
+            });
+        getWeather(position)
+            .then(function (response) {
+                $scope.location = response.body;
+                $scope.$apply();
+            });
     });
 });
 
@@ -49,6 +57,7 @@ function getWeather(position) {
                 if (err) {
                     reject(err);
                 } else {
+                    console.log('weather', res.body);
                     resolve(res);
                 }
             });
@@ -58,15 +67,16 @@ function getWeather(position) {
 function getZipCodes(position) {
     return new Promise(function (resolve, reject) {
         window.superagent
-            .get('http://dawa.aws.dk/adgangsadresser/reverse')
-            .query({
-                y: position.coords.latitude,
-                x: position.coords.longitude
-            })
+            .get('http://dawa.aws.dk/postnumre?cirkel=' + [
+                    position.coords.longitude,
+                    position.coords.latitude,
+                    10000
+                ].join(','))
             .end(function (err, res) {
                 if (err) {
                     reject(err);
                 } else {
+                    console.log('zips', res.body);
                     resolve(res);
                 }
             });
@@ -81,8 +91,15 @@ function getDnEvents() {
                 if (err) {
                     reject(err);
                 } else {
+                    console.log('events', res.body);
                     resolve(res);
                 }
             });
+    });
+}
+
+function pluckZips(response) {
+    return response.body.map(function (item) {
+        return item.nr;
     });
 }
