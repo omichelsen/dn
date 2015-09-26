@@ -116,30 +116,3 @@ body {
         text-decoration: none;
     }
 }
-
-.page-main {
-    position: relative;
-}
-
-.page-view.ng-enter, .page-view.ng-leave {
-    transition: all ease-in-out 1s;
-
-    display:block;
-    width:100%;
-
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-}
-
-.page-view.ng-enter {
-    left:100%;
-}
-.page-view.ng-enter.ng-enter-active {
-    left:0;
-}
-.page-view.ng-leave.ng-leave-active {
-    left: -100%;
-}
