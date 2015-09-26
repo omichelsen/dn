@@ -4,10 +4,3 @@ if ('addEventListener' in document) {
         FastClick.attach(document.body);
     }, false);
 }
-
-// Prevent content scroll on touch devices
-if ('ontouchstart' in window) {
-    document.getElementById('page-main').addEventListener('touchmove', function (e) {
-        e.preventDefault();
-    });
-}
