@@ -7,30 +7,58 @@ angular.module('app', ['ngRoute'])
     });
 })
 
-.controller('MainCtrl', function ($rootScope, $scope) {
+.controller('MainCtrl', function ($rootScope, $scope, $http) {
     getLocation().then(function (position) {
         getAddress(position)
             .then(function (response) {
-                $scope.address = response.body;
-                $scope.$apply();
+                $scope.address = response.data;
             });
         getZipCodes(position)
             .then(pluckZips)
             .then(function (zips) {
                 getDnEvents()
                     .then(function (response) {
-                        $scope.events = response.body.filter(function (item) {
+                        $scope.events = response.data.filter(function (item) {
                             return zips.indexOf(item.zip) > -1;
                         });
-                        $scope.$apply();
                     });
             });
         getWeather(position)
             .then(function (response) {
-                $scope.weather = response.body;
-                $scope.$apply();
+                $scope.weather = response.data;
             });
     });
+
+    function getWeather(position) {
+        return $http.get('http://api.openweathermap.org/data/2.5/weather', {
+                params: {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude,
+                    units: 'metric'
+                }
+            });
+    }
+
+    function getAddress(position) {
+        return $http.get('http://dawa.aws.dk/adgangsadresser/reverse', {
+                params: {
+                    y: position.coords.latitude,
+                    x: position.coords.longitude
+                }
+            });
+    }
+
+    function getZipCodes(position) {
+        return $http.get('http://dawa.aws.dk/postnumre?cirkel=' + [
+                position.coords.longitude,
+                position.coords.latitude,
+                10000
+            ].join(','));
+    }
+
+    function getDnEvents() {
+        return $http.get('/dn_data.json');
+    }
 });
 
 function getLocation() {
@@ -50,81 +78,8 @@ function getLocation() {
     }
 };
 
-function getWeather(position) {
-    return new Promise(function (resolve, reject) {
-        window.superagent
-            .get('http://api.openweathermap.org/data/2.5/weather')
-            .query({
-                lat: position.coords.latitude,
-                lon: position.coords.longitude,
-                units: 'metric'
-            })
-            .end(function (err, res) {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log('weather', res.body);
-                    resolve(res);
-                }
-            });
-    });
-}
-
-function getAddress(position) {
-    return new Promise(function (resolve, reject) {
-        window.superagent
-            .get('http://dawa.aws.dk/adgangsadresser/reverse')
-            .query({
-                y: position.coords.latitude,
-                x: position.coords.longitude
-            })
-            .end(function (err, res) {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log('address', res.body);
-                    resolve(res);
-                }
-            });
-    });
-}
-
-function getZipCodes(position) {
-    return new Promise(function (resolve, reject) {
-        window.superagent
-            .get('http://dawa.aws.dk/postnumre?cirkel=' + [
-                    position.coords.longitude,
-                    position.coords.latitude,
-                    10000
-                ].join(','))
-            .end(function (err, res) {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log('zips', res.body);
-                    resolve(res);
-                }
-            });
-    });
-}
-
-function getDnEvents() {
-    return new Promise(function (resolve, reject) {
-        window.superagent
-            .get('/dn_data.json')
-            .end(function (err, res) {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log('events', res.body);
-                    resolve(res);
-                }
-            });
-    });
-}
-
 function pluckZips(response) {
-    return response.body.map(function (item) {
+    return response.data.map(function (item) {
         return item.nr;
     });
 }
