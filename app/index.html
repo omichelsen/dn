@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app" ng-controller="MainCtrl">
+<html lang="en" ng-app="app" ng-controller="AppCtrl">
 <head>
     <meta charset="utf-8">
     <title>Pindsvin</title>
@@ -24,7 +24,10 @@
 <body>
 
 <div id="page-main">
+    <div class="page-view" ng-view></div>
+</div>
 
+<script type="text/ng-template" id="front.html">
     <div class="front">
         <div class="location">
             <h2>{{address.postnummer.navn}}</h2>
@@ -34,22 +37,35 @@
             <h2 class="temperature">{{weather.main.temp | number:0}}°</h2>
         </div>
     </div>
-
     <ul class="events">
         <li ng-repeat="event in events | filter:{title:'!Årsmøde'}" class="event">
-            <h3>{{event.title}}</h3>
-            <div class="details">
-                <span class="type">Event</span>
-                <div class="date">{{event.time}}</div>
-            </div>
+            <a ng-href="#/events/{{event.zip}}">
+                <h3>{{event.title}}</h3>
+                <div class="details">
+                    <span class="type">Event</span>
+                    <div class="date">{{event.time}}</div>
+                </div>
+            </a>
         </li>
     </ul>
+</script>
 
-</div>
+<script type="text/ng-template" id="event.html">
+    <nav class="navigation">
+        <a href="#/" ng-click="back()">⬅ Tilbage</a>
+    </nav>
+    <div class="event-details">
+        <h2>{{event.title}}</h2>
+        <h3>{{event.type}}</h3>
+        <div class="date">{{event.dateTo}} {{event.time}}</div>
+        <div class="organizer">Organiseret af {{event.organizer}}</div>
+    </div>
+</script>
 
 <script src="scripts/bower_components/fastclick/lib/fastclick.js"></script>
 <script src="scripts/bower_components/moment/moment.js"></script>
 <script src="scripts/bower_components/angular/angular.js"></script>
+<script src="scripts/bower_components/angular-animate/angular-animate.js"></script>
 <script src="scripts/bower_components/angular-route/angular-route.js"></script>
 <script src="scripts/init.js"></script>
 <script src="scripts/app.js"></script>

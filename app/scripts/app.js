@@ -1,31 +1,38 @@
-angular.module('app', ['ngRoute'])
+var app = angular.module('app', ['ngRoute', 'ngAnimate']);
 
-.config(function ($provide, $routeProvider, $locationProvider) {
-    $locationProvider.html5Mode(true);
-    $routeProvider.otherwise({
+app.config(function ($routeProvider) {
+    $routeProvider.when('/', {
+        title: 'Pindsvin',
+        templateUrl: 'front.html',
+        controller: 'FrontCtrl'
+    }).when('/events/:eventId', {
+        title: 'Event',
+        templateUrl: 'event.html',
+        controller: 'EventCtrl'
+    }).otherwise({
         redirectTo: '/'
     });
-})
+});
 
-.controller('MainCtrl', function ($rootScope, $scope, $http) {
+app.controller('AppCtrl', function ($rootScope, $scope, $http) {
     getLocation().then(function (position) {
         getAddress(position)
             .then(function (response) {
-                $scope.address = response.data;
+                $rootScope.address = response.data;
             });
         getZipCodes(position)
             .then(pluckZips)
             .then(function (zips) {
                 getDnEvents()
                     .then(function (response) {
-                        $scope.events = response.data.filter(function (item) {
+                        $rootScope.events = response.data.filter(function (item) {
                             return zips.indexOf(item.zip) > -1;
                         });
                     });
             });
         getWeather(position)
             .then(function (response) {
-                $scope.weather = response.data;
+                $rootScope.weather = response.data;
             });
     });
 
@@ -59,6 +66,19 @@ angular.module('app', ['ngRoute'])
     function getDnEvents() {
         return $http.get('/dn_data.json');
     }
+});
+
+app.controller('FrontCtrl', function ($rootScope, $scope) {
+});
+
+app.controller('EventCtrl', function ($rootScope, $scope, $route, $window) {
+    $scope.event = $rootScope.events.filter(function (item) {
+        return item.zip === $route.current.params.eventId;
+    })[0];
+
+    $scope.back = function () {
+        $window.history.back();
+    };
 });
 
 function getLocation() {

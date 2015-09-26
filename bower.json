@@ -5,6 +5,7 @@
     "angular": "~1.4.6",
     "angular-route": "~1.4.6",
     "fastclick": "~1.0.3",
-    "moment": "^2.9.0"
+    "moment": "^2.9.0",
+    "angular-animate": "~1.4.6"
   }
 }
